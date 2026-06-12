@@ -1,0 +1,24 @@
+# RepoRadar — pinned to versions verified working together on Python 3.11.
+# Install:  pip install -r requirements.txt
+
+# Orchestration
+langgraph==1.2.4
+
+# OpenAI LLM calls
+langchain-openai==1.3.0
+
+# GitHub MCP client (the ONLY way agents touch GitHub)
+langchain-mcp-adapters==0.3.0
+mcp==1.27.2
+
+# API server
+fastapi==0.136.3
+uvicorn[standard]==0.49.0
+sse-starlette==3.3.4
+
+# Config + HTTP
+python-dotenv==1.2.2
+httpx==0.28.1
+
+# LangGraph Studio / `langgraph dev` (run mode 1). Safe to keep for local dev.
+langgraph-cli[inmem]==0.4.29
