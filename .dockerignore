@@ -1,0 +1,14 @@
+# Keep the build context small: only requirements.txt, agent/, api/ are needed.
+.git
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.env
+.env.example
+frontend
+docs
+*.md
+langgraph.json
+.DS_Store
