@@ -1,10 +1,21 @@
-# Backend-only image for Railway.
+# Multi-stage build: compile the React UI, then a slim Python runtime that
+# serves BOTH the FastAPI API and the built UI at "/" on the same origin.
 #
 # Why a Dockerfile (not Railpack)? Railpack only auto-detects an entrypoint at
 # the repo root (main.py/app.py/server.py); this app lives at api/main.py, and
 # Railpack's Procfile support is deprecated — so its build can't resolve a start
 # command. A Dockerfile makes the build deterministic and bakes in the start
 # command, removing all of that guesswork.
+
+# ---------- stage 1: build the React frontend ----------
+FROM node:22-slim AS frontend
+WORKDIR /web
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
+
+# ---------- stage 2: Python runtime ----------
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
@@ -18,9 +29,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# App code (backend only — the React frontend is not built/served here).
+# App code.
 COPY agent/ ./agent/
 COPY api/ ./api/
+# Built React UI — FastAPI mounts this at "/" (see api/main.py).
+COPY --from=frontend /web/dist ./frontend/dist
 
 # Run as a non-root user.
 RUN useradd --create-home --uid 10001 appuser
