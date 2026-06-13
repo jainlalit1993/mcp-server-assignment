@@ -1,0 +1,16 @@
+# Keep the build context small. The frontend SOURCE is needed (the Docker
+# build compiles the React UI); only its install/build artifacts are excluded.
+.git
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+.env
+.env.example
+frontend/node_modules
+frontend/dist
+docs
+*.md
+langgraph.json
+.DS_Store
